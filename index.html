@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashok Denting & Painting | Jodhpur's Premium Auto Shop</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ================= VARIABLES ================= */
+        :root {
+            --bg: #0D0D0D;
+            --primary: #FF4B00;
+            --secondary: #C0C0C0;
+            --text: #F5F5F5;
+            --highlight: #FFD700;
+            --font-head: 'Rajdhani', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-stat: 'Bebas Neue', sans-serif;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+            --beat: 0.3s;
+        }
+
+        /* ================= RESET & BASE ================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-head); text-transform: uppercase; }
+        a { text-decoration: none; color: inherit; }
+        
+        /* Loading Progress Bar */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 4px; background: var(--primary);
+            width: 0%; z-index: 9999; transition: width 0.5s ease;
+        }
+
+        /* ================= ANIMATION SYSTEM ================= */
+        .scroll-anim { opacity: 0; transition: all 1s var(--ease); }
+        .slide-left { transform: translateX(-50px); }
+        .slide-right { transform: translateX(50px); }
+        .slide-up { transform: translateY(50px); }
+        .flip-3d { transform: perspective(1000px) rotateY(90deg); }
+        
+        .is-visible { opacity: 1; transform: translate(0) rotateY(0deg) rotateX(0deg) !important; }
+
+        .delay-1 { transition-delay: calc(var(--beat) * 1); }
+        .delay-2 { transition-delay: calc(var(--beat) * 2); }
+        .delay-3 { transition-delay: calc(var(--beat) * 3); }
+        .delay-4 { transition-delay: calc(var(--beat) * 4); }
+
+        /* Word by Word Animation */
+        .word-wrap { display: inline-block; overflow: hidden; }
+        .word {
+            display: inline-block; opacity: 0; transform: translateY(100%);
+            transition: all 0.5s var(--ease);
+        }
+        .is-visible .word { opacity: 1; transform: translateY(0); }
+
+        /* ================= HERO SECTION ================= */
+        .hero {
+            height: 100vh; position: relative; display: flex; align-items: center;
+            justify-content: center; text-align: center; overflow: hidden;
+            background: radial-gradient(circle at center, rgba(255, 75, 0, 0.1) 0%, var(--bg) 70%);
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(45deg, rgba(192,192,192,0.03) 0px, rgba(192,192,192,0.03) 2px, transparent 2px, transparent 50px);
+            z-index: 0;
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 20px; }
+        .hero h1 { font-size: 4.5rem; line-height: 1.1; margin-bottom: 20px; text-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        .hero h1 .highlight { color: var(--primary); }
+        .hero h1 .glow { color: var(--secondary); text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .hero-tagline { font-size: 1.5rem; color: var(--secondary); margin-bottom: 40px; }
+        
+        .car-silhouette {
+            position: absolute; width: 800px; opacity: 0.15;
+            animation: rotateCar 20s linear infinite; z-index: 1;
+            filter: drop-shadow(0 0 30px var(--primary));
+        }
+        @keyframes rotateCar { 0% { transform: perspective(1000px) rotateY(0deg); } 100% { transform: perspective(1000px) rotateY(360deg); } }
+
+        .btn-group { display: flex; gap: 20px; justify-content: center; }
+        .btn {
+            padding: 15px 35px; font-family: var(--font-head); font-size: 1.2rem; font-weight: 700;
+            border-radius: 4px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-primary {
+            background: var(--primary); color: #fff; border: none;
+            box-shadow: 0 4px 15px rgba(255, 75, 0, 0.4);
+            animation: pulse-ring 2s infinite;
+        }
+        .btn-primary:hover { transform: scale(1.05); }
+        .btn-outline { background: transparent; color: var(--text); border: 2px solid var(--secondary); }
+        .btn-outline:hover { background: var(--secondary); color: var(--bg); }
+
+        @keyframes pulse-ring { 
+            0% { box-shadow: 0 0 0 0 rgba(255, 75, 0, 0.7); } 
+            70% { box-shadow: 0 0 0 15px rgba(255, 75, 0, 0); } 
+            100% { box-shadow: 0 0 0 0 rgba(255, 75, 0, 0); } 
+        }
+
+        /* ================= WHY CHOOSE US ================= */
+        .section { padding: 100px 20px; max-width: 1280px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-size: 3rem; display: inline-flex; gap: 15px; }
+        .section-header h2 span:first-child { color: var(--secondary); }
+        .section-header h2 span:last-child { color: var(--primary); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 40px; perspective: 1000px; }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px 20px; text-align: center; border-radius: 10px;
+            backdrop-filter: blur(10px); transition: all 0.5s var(--ease);
+        }
+        .stat-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
+        .stat-card .counter { font-family: var(--font-stat); font-size: 4rem; color: var(--highlight); line-height: 1; }
+        .stat-card p { font-size: 1.1rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card:hover { transform: translateY(-10px) rotateX(5deg); border-color: var(--primary); box-shadow: 0 15px 30px rgba(255,75,0,0.1); }
+        
+        .trust-text { text-align: center; font-size: 1.5rem; color: var(--text); max-width: 800px; margin: 0 auto; }
+
+        /* ================= SERVICES ================= */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; perspective: 1000px; }
+        .service-card {
+            background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 8px;
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.5s var(--ease); transform-style: preserve-3d;
+        }
+        .service-card i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; }
+        .service-card h3 { font-size: 1.5rem; margin-bottom: 10px; transition: letter-spacing 0.3s ease; }
+        .service-card p { color: var(--secondary); font-size: 0.95rem; }
+        .service-card:hover {
+            transform: translateY(-8px) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(255, 75, 0, 0.2);
+            border-color: rgba(255, 75, 0, 0.5);
+        }
+        .service-card:hover h3 { letter-spacing: 1px; color: var(--primary); }
+
+        /* ================= WORK GALLERY (BEFORE/AFTER) ================= */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+        .ba-slider {
+            position: relative; width: 100%; height: 300px; overflow: hidden;
+            border-radius: 8px; cursor: ew-resize;
+        }
+        .ba-slider img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .img-after { z-index: 1; }
+        .img-before { z-index: 2; clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+        .slider-handle {
+            position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: var(--primary);
+            z-index: 3; transform: translateX(-50%); pointer-events: none;
+        }
+        .slider-handle::after {
+            content: '↔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 40px; height: 40px; background: var(--primary); color: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* ================= TESTIMONIALS ================= */
+        .testimonial-carousel { display: flex; overflow-x: hidden; gap: 30px; padding: 20px 0; }
+        .testi-card {
+            min-width: 350px; background: #1a1a1a; padding: 30px; border-left: 4px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+        }
+        .stars { color: var(--highlight); margin-bottom: 15px; }
+        .testi-quote { font-style: italic; margin-bottom: 20px; font-size: 1.1rem; }
+        .testi-author { font-family: var(--font-head); color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ================= CONTACT + MAP ================= */
+        .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .contact-form { background: rgba(255,255,255,0.02); padding: 40px; border-radius: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 15px; background: #111; border: 1px solid #333;
+            color: #fff; font-family: var(--font-body); border-radius: 5px; outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
+        
+        .contact-info { display: flex; flex-direction: column; gap: 20px; }
+        .info-card { display: flex; gap: 20px; background: #111; padding: 20px; border-radius: 8px; align-items: center; }
+        .info-card i { font-size: 2rem; color: var(--primary); }
+        .info-card h4 { font-size: 1.2rem; color: var(--secondary); margin-bottom: 5px; }
+        .info-card a { font-size: 1.1rem; font-weight: bold; transition: color 0.3s; }
+        .info-card a:hover { color: var(--primary); }
+        
+        .map-container { width: 100%; height: 250px; border-radius: 8px; overflow: hidden; margin-top: 20px; }
+        .map-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* ================= FOOTER & WHATSAPP ================= */
+        footer { background: #080808; padding: 40px 20px; text-align: center; border-top: 1px solid #222; }
+        .social-links { margin: 20px 0; }
+        .social-links a { display: inline-block; margin: 0 10px; font-size: 1.5rem; color: var(--secondary); transition: color 0.3s; }
+        .social-links a:hover { color: var(--primary); }
+        
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background-color: #25d366; color: #FFF; border-radius: 50px;
+            text-align: center; font-size: 30px; box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            z-index: 100; display: flex; align-items: center; justify-content: center;
+            animation: bounce 5s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 992px) {
+            .contact-wrap { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 3.5rem; }
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .section-header h2 { font-size: 2.2rem; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- SECTION 1: HERO -->
+    <section class="hero" id="home">
+        <!-- Placeholder for rotating car silhouette -->
+        <svg class="car-silhouette" viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M499.99 176h-59.87l-16.64-41.6C406.38 91.63 365.57 64 319.99 64h-128c-45.58 0-86.39 27.63-103.49 70.4L71.86 176H12.01C5.38 176 0 181.38 0 188v148c0 6.62 5.38 12 12.01 12h25.87c7.22 53.66 53.07 96 109.11 96 56.04 0 101.89-42.34 109.11-96h199.78c7.22 53.66 53.07 96 109.11 96 56.04 0 101.89-42.34 109.11-96h25.87c6.63 0 12.01-5.38 12.01-12V188c.01-6.62-5.37-12-12-12zM147 384c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm218 0c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm71.01-160H75.99c-11.83 0-22.39-7.39-26.47-18.52L24.1 136h463.8l-25.42 69.48c-4.08 11.13-14.64 18.52-26.47 18.52z"/>
+        </svg>
+        <div class="hero-content">
+            <h1>
+                <div class="scroll-anim slide-left delay-1">Your Car Deserves</div>
+                <div class="scroll-anim slide-right delay-2 highlight">The Best Hands</div>
+                <div class="scroll-anim slide-up delay-3 glow">In Jodhpur</div>
+            </h1>
+            <p class="hero-tagline scroll-anim slide-up delay-4" id="typewriter"></p>
+            <div class="btn-group scroll-anim slide-up delay-4">
+                <a href="#contact" class="btn btn-primary">Book Now</a>
+                <a href="#gallery" class="btn btn-outline">See Our Work</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: WHY CHOOSE US -->
+    <section class="section" id="why-us">
+        <div class="stats-grid">
+            <div class="stat-card scroll-anim flip-3d delay-1">
+                <i class="fa-solid fa-wrench"></i>
+                <div class="counter" data-target="500">0</div>
+                <p>Cars Repaired</p>
+            </div>
+            <div class="stat-card scroll-anim flip-3d delay-2">
+                <i class="fa-solid fa-paint-roller"></i>
+                <div class="counter" data-target="15">0</div>
+                <p>Years Experience</p>
+            </div>
+            <div class="stat-card scroll-anim flip-3d delay-3">
+                <i class="fa-solid fa-star"></i>
+                <div class="counter" data-target="100">0</div><span>%</span>
+                <p>Satisfaction</p>
+            </div>
+            <div class="stat-card scroll-anim flip-3d delay-4">
+                <i class="fa-solid fa-location-dot"></i>
+                <div class="counter" data-target="1">0</div>
+                <p>Trusted Location</p>
+            </div>
+        </div>
+        <div class="trust-text scroll-anim slide-up split-words">
+            From minor dents to complete repaints — we handle it all with precision and passion.
+        </div>
+    </section>
+
+    <!-- SECTION 3: SERVICES -->
+    <section class="section" id="services">
+        <div class="section-header">
+            <h2>
+                <span class="scroll-anim slide-left">Our</span>
+                <span class="scroll-anim slide-right">Services</span>
+            </h2>
+        </div>
+        <div class="services-grid">
+            <!-- Service 1 -->
+            <div class="service-card scroll-anim slide-up delay-1">
+                <i class="fa-solid fa-hammer"></i>
+                <h3>Dent Removal</h3>
+                <p>Paintless Dent Repair (PDR) and traditional dent pulling for flawless bodylines.</p>
+            </div>
+            <!-- Service 2 -->
+            <div class="service-card scroll-anim slide-up delay-2">
+                <i class="fa-solid fa-spray-can"></i>
+                <h3>Full Car Painting</h3>
+                <p>Oven-baked premium painting for a factory-level smooth finish.</p>
+            </div>
+            <!-- Service 3 -->
+            <div class="service-card scroll-anim slide-up delay-3">
+                <i class="fa-solid fa-car-side"></i>
+                <h3>Panel Replacement</h3>
+                <p>Precision replacement of hoods, doors, and bumpers with OEM parts.</p>
+            </div>
+            <!-- Service 4 -->
+            <div class="service-card scroll-anim slide-up delay-4">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h3>Scratch Removal</h3>
+                <p>Deep polishing and buffing to eliminate surface scratches and swirls.</p>
+            </div>
+            <!-- Service 5 -->
+            <div class="service-card scroll-anim slide-up delay-1">
+                <i class="fa-solid fa-car-burst"></i>
+                <h3>Accident Repair</h3>
+                <p>Complete frame straightening and body structural restoration.</p>
+            </div>
+            <!-- Service 6 -->
+            <div class="service-card scroll-anim slide-up delay-2">
+                <i class="fa-solid fa-gem"></i>
+                <h3>Ceramic Coating</h3>
+                <p>High-end protection to keep your paint glowing and hydrophobic.</p>
+            </div>
+            <!-- Service 7 -->
+            <div class="service-card scroll-anim slide-up delay-3">
+                <i class="fa-solid fa-shield-glass"></i>
+                <h3>Windshield Repair</h3>
+                <p>Quick fixes for chips and cracks before they spread.</p>
+            </div>
+            <!-- Service 8 -->
+            <div class="service-card scroll-anim slide-up delay-4">
+                <i class="fa-solid fa-soap"></i>
+                <h3>Deep Detailing</h3>
+                <p>Interior and exterior spa treatment for a showroom fresh look.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: WORK GALLERY -->
+    <section class="section" id="gallery">
+        <div class="section-header">
+            <h2>
+                <span class="scroll-anim slide-left">Before</span>
+                <span class="scroll-anim slide-right">& After</span>
+            </h2>
+        </div>
+        <div class="gallery-grid">
+            <!-- Slider 1 -->
+            <div class="ba-slider scroll-anim flip-3d delay-1" onmousemove="slideMove(event, this)" ontouchmove="slideMove(event, this)">
+                <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&q=80" alt="After" class="img-after">
+                <img src="https://images.unsplash.com/photo-1596541538357-194165d21a8f?w=800&q=80" alt="Before" class="img-before">
+                <div class="slider-handle"></div>
+            </div>
+            <!-- Slider 2 -->
+            <div class="ba-slider scroll-anim flip-3d delay-2" onmousemove="slideMove(event, this)" ontouchmove="slideMove(event, this)">
+                <img src="https://images.unsplash.com/photo-1610647752706-3bb12232b3ab?w=800&q=80" alt="After" class="img-after">
+                <img src="https://images.unsplash.com/photo-1533558701576-23c65e0272fb?w=800&q=80" alt="Before" class="img-before">
+                <div class="slider-handle"></div>
+            </div>
+            <!-- Slider 3 -->
+            <div class="ba-slider scroll-anim flip-3d delay-3" onmousemove="slideMove(event, this)" ontouchmove="slideMove(event, this)">
+                <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&q=80" alt="After" class="img-after">
+                <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=80" alt="Before" class="img-before">
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: TESTIMONIALS -->
+    <section class="section" id="testimonials">
+        <div class="section-header">
+            <h2>
+                <span class="scroll-anim slide-left">Customer</span>
+                <span class="scroll-anim slide-right">Reviews</span>
+            </h2>
+        </div>
+        <div class="testimonial-carousel scroll-anim slide-up delay-1" id="carousel">
+            <div class="testi-card">
+                <div class="stars">★★★★★</div>
+                <p class="testi-quote split-words">"Ashok bhai ne meri Wagon R bilkul nai jaisi kar di. Kamaal ka kaam hai!"</p>
+                <h4 class="testi-author">— Ramesh S., Jodhpur</h4>
+            </div>
+            <div class="testi-card">
+                <div class="stars">★★★★★</div>
+                <p class="testi-quote split-words">"Best denting shop in Kabir Nagar. Fair price and fast work."</p>
+                <h4 class="testi-author">— Priya M., Jodhpur</h4>
+            </div>
+            <div class="testi-card">
+                <div class="stars">★★★★★</div>
+                <p class="testi-quote split-words">"Scratches totally gone. Painting is smoother than showroom finish."</p>
+                <h4 class="testi-author">— Vikram J., Jodhpur</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: CONTACT & MAP -->
+    <section class="section" id="contact">
+        <div class="contact-wrap">
+            <!-- Form -->
+            <div class="contact-form scroll-anim slide-left delay-1">
+                <h2>Get Free Estimate</h2>
+                <p style="margin-bottom: 20px; color: var(--secondary);">Fill out the form below and we will get back to you with an estimate.</p>
+                <form onsubmit="event.preventDefault(); alert('Request sent successfully!');">
+                    <div class="form-group"><input type="text" placeholder="Your Name" required></div>
+                    <div class="form-group"><input type="tel" placeholder="Phone Number" required></div>
+                    <div class="form-group">
+                        <select required>
+                            <option value="">Select Service Needed</option>
+                            <option value="denting">Denting / Scratch Repair</option>
+                            <option value="painting">Car Painting</option>
+                            <option value="accident">Accident Repair</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Get Free Estimate</button>
+                </form>
+            </div>
+            <!-- Info -->
+            <div class="contact-info scroll-anim slide-right delay-2">
+                <div class="info-card">
+                    <i class="fa-solid fa-phone"></i>
+                    <div>
+                        <h4>Call Us</h4>
+                        <a href="tel:+919950890027">9950890027</a>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div>
+                        <h4>Visit Us</h4>
+                        <p style="color:var(--text)">Kabir Nagar, Jodhpur, Rajasthan</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-clock"></i>
+                    <div>
+                        <h4>Working Hours</h4>
+                        <p style="color:var(--text)">Mon–Sat: 9:00 AM – 7:00 PM<br>Sunday: 10:00 AM – 4:00 PM</p>
+                    </div>
+                </div>
+                <!-- Embedded Map -->
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14311.890632617631!2d72.9982464!3d26.2905007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39418c5c760447eb%3A0xc36e3cceb63777eb!2sKabir%20Nagar%2C%20Jodhpur%2C%20Rajasthan%20342003!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: FOOTER -->
+    <footer>
+        <h2 style="color: var(--primary);">Ashok Denting & Painting</h2>
+        <p style="color: var(--secondary); margin-top: 10px;">Kabir Nagar, Jodhpur</p>
+        <div class="social-links">
+            <a href="https://wa.me/919950890027"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+        <p style="color: #666; font-size: 0.9rem;">&copy; 2025 Ashok Denting & Painting | Built for Performance.</p>
+    </footer>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/919950890027?text=Hi,%20I%20need%20denting/painting%20service%20for%20my%20car" class="whatsapp-float" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- JAVASCRIPT SYSTEM -->
+    <script>
+        // 1. Page Load Progress Bar
+        window.addEventListener('load', () => {
+            const bar = document.getElementById('progress-bar');
+            bar.style.width = '100%';
+            setTimeout(() => { bar.style.opacity = '0'; }, 500);
+        });
+
+        // 2. Typewriter Effect (Hero)
+        const taglineText = "Denting · Painting · Restoration";
+        const taglineElement = document.getElementById("typewriter");
+        let i = 0;
+        setTimeout(() => {
+            function typeWriter() {
+                if (i < taglineText.length) {
+                    taglineElement.innerHTML += taglineText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+            typeWriter();
+        }, 1200); // starts after 1.2s delay as per plan
+
+        // 3. Word-by-Word Splitter System
+        document.querySelectorAll('.split-words').forEach(el => {
+            const words = el.innerText.split(' ');
+            el.innerHTML = '';
+            words.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.className = 'word';
+                span.innerText = word + ' ';
+                // 80ms delay per word as requested
+                span.style.transitionDelay = `${index * 80}ms`;
+                el.appendChild(span);
+            });
+        });
+
+        // 4. Scroll Intersection Observer (Rhythmic Entries)
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    
+                    // Trigger Counter Animation when visible
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        const updateCount = () => {
+                            const target = +counter.getAttribute('data-target');
+                            const count = +counter.innerText;
+                            const inc = target / 50; // speed
+                            if (count < target) {
+                                counter.innerText = Math.ceil(count + inc);
+                                setTimeout(updateCount, 40); // 2 second total runtime approx
+                            } else {
+                                counter.innerText = target + (target > 100 ? '+' : '');
+                            }
+                        };
+                        updateCount();
+                        counter.classList.remove('counter'); // prevent re-running
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-anim').forEach(el => observer.observe(el));
+
+        // 5. Before/After Slider Logic
+        function slideMove(e, container) {
+            const rect = container.getBoundingClientRect();
+            // support touch and mouse
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            let percentage = (x / rect.width) * 100;
+            // keep bounds
+            if (percentage < 0) percentage = 0;
+            if (percentage > 100) percentage = 100;
+            
+            const beforeImg = container.querySelector('.img-before');
+            const handle = container.querySelector('.slider-handle');
+            
+            beforeImg.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+            handle.style.left = `${percentage}%`;
+        }
+
+        // 6. Testimonial Auto-Scroll
+        const carousel = document.getElementById('carousel');
+        let scrollAmount = 0;
+        setInterval(() => {
+            if(carousel) {
+                scrollAmount += 380; // card width + gap
+                if (scrollAmount >= carousel.scrollWidth) scrollAmount = 0;
+                carousel.scrollTo({ top: 0, left: scrollAmount, behavior: 'smooth' });
+            }
+        }, 3000); // 3s rhythm as requested
+    </script>
+</body>
+</html>
